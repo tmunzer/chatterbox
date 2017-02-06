@@ -8,7 +8,7 @@ var DeviceSchema = new mongoose.Schema({
     hostName: { type: String, required: true },
     serialId: { type: String, required: true },
     model: { type: String, required: true },
-    ip: { type: String, required: true },
+    ip: { type: String,  default: "0.0.0.0" },
     connected: {type: Boolean, required: true},
     created_at: { type: Date },
     updated_at: { type: Date }

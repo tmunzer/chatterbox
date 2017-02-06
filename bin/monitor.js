@@ -91,7 +91,7 @@ function deviceRemoved(account, device) {
     })
 }
 
-function sendError(error) {
+function sendError(account, error) {    
     var message = {
         "attachments": [
             {
@@ -124,7 +124,7 @@ function checkDevices() {
                     .exec(function (err, devicesInDB) {
                         // Retrieve the devices status from ACS
                         API.monitor.devices.devices(account, devAccount, function (err, devices) {
-                            if (err) sendError(err);
+                            if (err) sendError(account, err);
                             else {
                                 // for each device from ACS
                                 devices.forEach(function (device) {
