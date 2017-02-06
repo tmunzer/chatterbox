@@ -28,7 +28,8 @@ router.get('/web-app/', function (req, res, next) {
     if (req.session.xapi)
         res.render('web-app', {
             title: 'ACS Chatterbox',
-            slack_client_id: slackAccount.clientID
+            slack_client_id: slackAccount.clientID,
+            slack_redirect_url: slackAccount.redirectUrl
         });
     else {
         res.redirect("/login/");
