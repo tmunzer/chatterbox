@@ -55,12 +55,13 @@ router.get('/oauth', function (req, res) {
                         slackData.path = slackData.incoming_webhook.url.replace('https://' + slackData.host, '');
                         saveSlack(req, res, slackData);
                     }
-                    res.render("web-app");
+                    res.redirect("/web-app");
                 }
             });
         } else Error.render("Unknown error", "conf", req, res);
     } else res.redirect("/");
 })
+
 
 
 module.exports = router;

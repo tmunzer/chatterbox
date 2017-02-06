@@ -33,7 +33,7 @@ html
 
             
         div(id="main")
-            md-content.panel(md-whiteframe="7" layout="column")
+            md-content(layout="column")
                 md-tabs(md-dynamic-height md-border-bottom)
                     md-tab 
                         md-tab-label Slack
@@ -42,11 +42,42 @@ html
                                 a(href="https://slack.com/oauth/authorize?scope=incoming-webhook,commands&redirect_uri="+slack_redirect_url+"&client_id="+slack_client_id)
                                     img(alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x")
                             
-                            md-content
+                            md-content(md-whiteframe="5" style="margin: 5px;")
+                                md-toolbar(layout="row" layout-align="center center")
+                                    div.md-toolbar-tools
+                                        h2
+                                            span Number of Slack registrations: {{slack_data.length}}
+                                        span(flex)
+
+                                        div.md-toolbar-tools(id='table-search' ng-show="slack_query.show")
+                                            md-input-container(md-no-float class="md-block search-tool")
+                                                md-icon.material-icons.search-tool(style="color: white !important;") search
+                                                input(ng-model="slack_query.filter" class="search-tool" placeholder="Search" style="border-color: rgba(250,250,250,0.3);")
+                                            button.md-icon-button.md-button(type="button" ng-click="removeSlackFilter()" aria-label="close")
+                                                md-icon.material-icons close
+                                                md-tooltip(md-direction="bottom") Close                                                                    
+                                                div.md-ripple-container
+                            
+                                        div.md-toolbar-tools(ng-hide="slack_query.show")
+                                            div(flex)
+                                            button.md-icon-button.md-button(ng-click="slack_query.show = true" aria-label="filter_list")
+                                                md-icon.material-icons search
+                                                md-tooltip(md-direction="bottom") Search
+                                                div.md-ripple-container                                                        
+                                            md-button.md-icon-button.md-button(ng-click="deleteSlackAccounts()")
+                                                md-icon.material-icons delete
+                                                md-tooltip(md-direction="bottom") Delete
+                                    
+                                
+ 
+
                                 md-table-container
                                     table(md-table md-row-select multiple ng-model="slack_selected" md-progress="slack_request")
                                         thead(md-head md-order="slack_query.order" md-on-reorder="getDesserts")
                                             tr(md-row)
+                                                th(md-column style="width: 5%")
+                                                    div
+                                                        md-checkbox(ng-change="selectAllSlack()" ng-disabled="slack_data.length <= 0" ng-model="selectAllChecked" class="md-accent" aria-label="Select All")
                                                 th(md-column md-order-by="team_id")
                                                     span team_id
                                                 th(md-column md-order-by="team_name")
@@ -66,7 +97,10 @@ html
                                                 th(md-column md-order-by="access_token")
                                                     span access_token
                                         tbody(md-body)
-                                            tr(md-row md-select="slack" md-select-id="slack._id" ng-repeat="slack in slack_data")
+                                            tr(md-row md-select="slack" md-select-id="slack._id" ng-repeat="slack in slack_data | orderBy: slack_query.order" ng-click="selectOneSlack(slack, true)")
+                                                td(md-cell)
+                                                    div
+                                                        md-checkbox(ng-model="slack.selected" class="md-accent" ng-change="selectOneSlack(slack, false)" ng-click="$event.stopPropagation();" aria-label="Select slack account")
                                                 td(md-cell) {{slack.team_id}}
                                                 td(md-cell) {{slack.team_name}}
                                                 td(md-cell) {{slack.user_id}}
@@ -74,12 +108,12 @@ html
                                                 td(md-cell) {{slack.incoming_webhook.channel}}
                                                 td(md-cell) {{slack.incoming_webhook.channel_id}}
                                                 td(md-cell) 
-                                                    a(ng-href="{{slack.incoming_webhook.configuration_url}}") {{slack.incoming_webhook.configuration_url}}
+                                                    a(ng-href="{{slack.incoming_webhook.configuration_url}}" target="_blank") {{slack.incoming_webhook.configuration_url}}
                                                 td(md-cell) 
-                                                    a(ng-href="{{slack.incoming_webhook.url}}") {{slack.incoming_webhook.url}}
+                                                    a(ng-href="{{slack.incoming_webhook.url}}" target="_blank") {{slack.incoming_webhook.url}}
                                                 td(md-cell) {{slack.access_token}}                                                            
-                                md-table-pagination(md-limit="slack_query.limit" md-limit-options="[5, 10, 15]" md-page="slack_query.page" md-total="{{slack_data.count}}" md-page-select)
-                    md-tab
+                                md-table-pagination(md-limit="slack_query.limit" md-limit-options="[5, 10, 15]" md-page="slack_query.page" md-total="{{slack_data.length}}" md-page-select)
+                    md-tab(ng-if="false")
                         md-tab-label Spark
         
         
