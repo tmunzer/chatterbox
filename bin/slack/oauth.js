@@ -15,7 +15,7 @@ module.exports.getPermanentToken = function (code, slackAccount, callback) {
         'path': '/api/oauth.access?client_id=' + slackAccount.clientID +
         '&client_secret=' + slackAccount.clientSecret +
         '&code=' + code +
-        '&redirectUri=' + slackAccount.redirectUrl,
+        '&redirect_uri=' + slackAccount.redirectUrl,
         'method': 'GET'
     };
     var req = https.request(options, function (res) {

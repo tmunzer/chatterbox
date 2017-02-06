@@ -23,6 +23,9 @@ html
                         div.login-box-login
                             h1= "Something went wrong when loading " + current_page + " page..."
                             h2= error.status
-                            pre= error.message
-                            pre #{error.stack}
+                            if error.message
+                                pre= error.message
+                                pre #{error.stack}
+                            else 
+                                pre= error
 

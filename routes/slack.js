@@ -51,14 +51,8 @@ router.get('/oauth', function (req, res) {
                     if (data.warning) console.log(data.warning);
                     if (data.ok) {
                         var slackData = data;
-                        console.log("====");
-                        console.log(slackData);
                         slackData.host = slackData.incoming_webhook.url.replace("https://", "").split("/")[0];
-                        console.log("====");
-                        console.log(slackData);
                         slackData.path = slackData.incoming_webhook.url.replace('https://' + slackData.host, '');
-                        console.log("====");
-                        console.log(slackData);
                         saveSlack(req, res, slackData);
                     }
                     res.render("web-app");
