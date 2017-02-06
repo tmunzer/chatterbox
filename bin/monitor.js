@@ -91,7 +91,7 @@ function deviceRemoved(account, device) {
     })
 }
 
-function sendError(account, error) {    
+function sendError(account, error) {
     var message = {
         "attachments": [
             {
@@ -117,15 +117,18 @@ function checkDevices() {
         .populate("slack")
         .exec(function (err, accounts) {
             // Loop on ACS accounts
-            accounts.forEach(function (account) {
+            if (err) sendError(account, err);
+            else accounts.forEach(function (account) {
                 // Get Devices for the current ACS account
                 Device
                     .find({ 'ownerId': account.ownerId })
                     .exec(function (err, devicesInDB) {
                         // Retrieve the devices status from ACS
-                        API.monitor.devices.devices(account, devAccount, function (err, devices) {
+                        if (err) sendError(account, err);
+                        else API.monitor.devices.devices(account, devAccount, function (err, devices) {
                             if (err) sendError(account, err);
                             else {
+                                console.log(" -- Account " + account.ownerId + " has " + devices.length + " devices");
                                 // for each device from ACS
                                 devices.forEach(function (device) {
                                     // filter on REAL devices
