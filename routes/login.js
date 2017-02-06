@@ -37,10 +37,9 @@ router.get('/web-app/', function (req, res, next) {
 });
 
 router.get('/logout/', function (req, res, next) {
-    if (req.session.xapi){
-    req.logout();
-    req.session.destroy();
-    res.redirect('/login/');
+    if (req.session.xapi) {
+        req.session.destroy();
+        res.redirect('/login/');
     } else res.redirect("/");
 });
 module.exports = router;
