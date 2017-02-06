@@ -39,7 +39,7 @@ function updateDeviceStatus(account, device) {
     var message = {
         "attachments": [
             {
-                "title": title,
+                "title": "Account " + account.ownerId + " -- " + title,
                 "color": getColor(device),
                 "text": getText(device)
             }
@@ -58,7 +58,7 @@ function deviceAdded(account, device) {
     var message = {
         "attachments": [
             {
-                "title": getTitle(device) + " had beed added to your HMNG account!",
+                "title": "Account " + account.ownerId + " -- " + getTitle(device) + " had beed added to your HMNG account!",
                 "color": "#2196f3",
                 "text": getText(device)
             }
@@ -76,7 +76,7 @@ function deviceRemoved(account, device) {
     var message = {
         "attachments": [
             {
-                "title": getTitle(device) + " had beed removed to your HMNG account!",
+                "title": "Account " + account.ownerId + " -- " + getTitle(device) + " had beed removed to your HMNG account!",
                 "color": "warning",
                 "text": getText(device)
             }
@@ -95,7 +95,7 @@ function sendError(account, error) {
     var message = {
         "attachments": [
             {
-                "title": "Error while processing data",
+                "title": "Account " + account.ownerId + " -- Error while processing data",
                 "color": "danger",
                 "text": error
             }
