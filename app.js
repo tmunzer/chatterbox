@@ -56,6 +56,9 @@ app.use('/bower_components',  express.static('../bower_components'));
 var slack = require('./routes/slack');
 app.use('/slack/', slack);
 
+var spark = require('./routes/spark');
+app.use('/spark/', spark);
+
 var oauth = require('./routes/oauth');
 app.use('/oauth/', oauth);
 

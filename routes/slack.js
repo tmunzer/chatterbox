@@ -45,7 +45,7 @@ router.get('/oauth', function (req, res) {
             Error.render(req.query.error, "conf", req, res);
         } else if (req.query.code) {
             var authCode = req.query.code;
-            OAuth.getPermanentToken(authCode, slackAccount, function (data) {
+            OAuth.getPermanentToken(authCode, req.session.state, slackAccount, function (data) {
                 if (data.error) Error.render(data.error, "conf", req, res);
                 else {
                     if (data.warning) console.log(data.warning);

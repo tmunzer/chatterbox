@@ -39,7 +39,7 @@ html
                         md-tab-label Slack
                         md-tab-body
                             md-content(layout-padding)
-                                a(href="https://slack.com/oauth/authorize?scope=incoming-webhook,commands&redirect_uri="+slack_redirect_url+"&client_id="+slack_client_id)
+                                a(href=slack_url)
                                     img(alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x")
                             
                             md-content(md-whiteframe="5" style="margin: 5px;")
@@ -113,8 +113,85 @@ html
                                                     a(ng-href="{{slack.incoming_webhook.url}}" target="_blank") {{slack.incoming_webhook.url}}
                                                 td(md-cell) {{slack.access_token}}                                                            
                                 md-table-pagination(md-limit="slack_query.limit" md-limit-options="[5, 10, 15]" md-page="slack_query.page" md-total="{{slack_data.length}}" md-page-select)
-                    md-tab(ng-if="false")
+                    md-tab
                         md-tab-label Spark
+                        md-tab-body
+                            md-content(layout-padding)
+                                md-button.md-raised(style="background-color: white;padding: 2px 10px;margin: 0 8px;border: solid 1px lightgray;" href=spark_url)
+                                    img(alt="Add to Spark" height="30" width="30" style="vertical-align: middle" src="/images/spark.png")
+                                    span(style="text-transform: none;") Add to 
+                                    b(style="text-transform: none;") Spark
+                            md-content(md-whiteframe="5" style="margin: 5px;")
+                                md-toolbar(layout="row" layout-align="center center")
+                                    div.md-toolbar-tools
+                                        h2
+                                            span Number of Spark registrations: {{spark_data.length}}
+                                        span(flex)
+
+                                        div.md-toolbar-tools(id='table-search' ng-show="spark_query.show")
+                                            md-input-container(md-no-float class="md-block search-tool")
+                                                md-icon.material-icons.search-tool(style="color: white !important;") search
+                                                input(ng-model="spark_query.filter" class="search-tool" placeholder="Search" style="border-color: rgba(250,250,250,0.3);")
+                                            button.md-icon-button.md-button(type="button" ng-click="removeSparkkFilter()" aria-label="close")
+                                                md-icon.material-icons close
+                                                md-tooltip(md-direction="bottom") Close                                                                    
+                                                div.md-ripple-container
+                            
+                                        div.md-toolbar-tools(ng-hide="spark_query.show")
+                                            div(flex)
+                                            button.md-icon-button.md-button(ng-click="spark_query.show = true" aria-label="filter_list")
+                                                md-icon.material-icons search
+                                                md-tooltip(md-direction="bottom") Search
+                                                div.md-ripple-container                                                        
+                                            md-button.md-icon-button.md-button(ng-click="deleteSparkAccounts()")
+                                                md-icon.material-icons delete
+                                                md-tooltip(md-direction="bottom") Delete
+                                    
+                                
+ 
+
+                                md-table-container
+                                    table(md-table md-row-select multiple ng-model="spark_selected" md-progress="spark_request")
+                                        thead(md-head md-order="spark_query.order" md-on-reorder="getDesserts")
+                                            tr(md-row)
+                                                th(md-column style="width: 5%")
+                                                    div
+                                                        md-checkbox(ng-change="selectAllSpark()" ng-disabled="spark_data.length <= 0" ng-model="selectAllChecked" class="md-accent" aria-label="Select All")
+                                                th(md-column md-order-by="team_id")
+                                                    span team_id
+                                                th(md-column md-order-by="team_name")
+                                                    span team_name
+                                                th(md-column md-order-by="user_id")
+                                                    span user_id
+                                                th(md-column md-order-by="scope")
+                                                    span scope
+                                                th(md-column md-order-by="incoming_webhook.channel")
+                                                    span Webhook channel
+                                                th(md-column md-order-by="incoming_webhook.channel_id")
+                                                    span Webhook channel_id
+                                                th(md-column md-order-by="incoming_webhook.configuration_url")
+                                                    span Webhook configuration_url
+                                                th(md-column md-order-by="incoming_webhook.url")
+                                                    span Webhook url
+                                                th(md-column md-order-by="access_token")
+                                                    span access_token
+                                        tbody(md-body)
+                                            tr(md-row md-select="spark" md-select-id="spark._id" ng-repeat="spark in spark_data | orderBy: spark_query.order" ng-click="selectOneSpark(spark, true)")
+                                                td(md-cell)
+                                                    div
+                                                        md-checkbox(ng-model="spark.selected" class="md-accent" ng-change="selectOneSpark(spark, false)" ng-click="$event.stopPropagation();" aria-label="Select spark account")
+                                                td(md-cell) {{spark.team_id}}
+                                                td(md-cell) {{spark.team_name}}
+                                                td(md-cell) {{spark.user_id}}
+                                                td(md-cell) {{spark.scope}}
+                                                td(md-cell) {{spark.incoming_webhook.channel}}
+                                                td(md-cell) {{spark.incoming_webhook.channel_id}}
+                                                td(md-cell) 
+                                                    a(ng-href="{{spark.incoming_webhook.configuration_url}}" target="_blank") {{spark.incoming_webhook.configuration_url}}
+                                                td(md-cell) 
+                                                    a(ng-href="{{spark.incoming_webhook.url}}" target="_blank") {{spark.incoming_webhook.url}}
+                                                td(md-cell) {{spark.access_token}}                                                            
+                                md-table-pagination(md-limit="spark_query.limit" md-limit-options="[5, 10, 15]" md-page="spark_query.page" md-total="{{spark_data.length}}" md-page-select)
         
         
         script(type="text/javascript").
@@ -145,3 +222,4 @@ html
         script(src="/bower_components/angular-material-data-table/dist/md-data-table.min.js")
         script(src="/bower_components/angular-sanitize/angular-sanitize.min.js")
         script(src="/web-app/web-app.js")
+        script(src="/web-app/services.js")

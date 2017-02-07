@@ -125,46 +125,48 @@ function checkDevices() {
                     .exec(function (err, devicesInDB) {
                         // Retrieve the devices status from ACS
                         if (err) sendError(account, err);
-                        else API.monitor.devices.devices(account, devAccount, function (err, devices) {
-                            if (err) sendError(account, err);
-                            else {
-                                console.log(" -- Account " + account.ownerId + " has " + devices.length + " devices");
-                                // for each device from ACS
-                                devices.forEach(function (device) {
-                                    // filter on REAL devices
-                                    if (device.simType.indexOf("REAL") >= 0) {
-                                        var isPresent = false;
-                                        // retrieve the current device from ACS into the devoce from DB                                                                                
-                                        devicesInDB.forEach(function (deviceInDB) {
-                                            if (device.deviceId == deviceInDB.deviceId) {
-                                                // mark the current device as 'present in Db' (will not add it later)
-                                                isPresent = true
-                                                // mark the current deviceInDB as 'present in ACS' (will not remove it later)
-                                                deviceInDB.present = true;
-                                                // check the status change
-                                                if (device.connected != deviceInDB.connected)
-                                                    Device.update({ _id: deviceInDB._id }, device, function (err, savedDevice) {
-                                                        if (err) sendError(account, err);
-                                                        else updateDeviceStatus(account, device)
-                                                    })
-                                            }
-                                        })
-                                        // save the new device into DB
-                                        if (!isPresent) Device(device).save(function (err, savedDevice) {
-                                            if (err) sendError(account, err);
-                                            else deviceAdded(account, device)
-                                        })
-                                    }
-                                })
-                                devicesInDB.forEach(function (deviceInDB) {
-                                    if (!deviceInDB.present)
-                                        Device.find({ _id: deviceInDB._id }).remove(function (err) {
-                                            if (err) sendError(account, err);
-                                            else deviceRemoved(account, deviceInDB)
-                                        });
-                                })
-                            }
-                        })
+                        // only request ACS data if a Slack account or a Spark account are configured
+                        else if (account.slack.length > 0 || account.spark.length > 0)
+                            API.monitor.devices.devices(account, devAccount, function (err, devices) {
+                                if (err) sendError(account, err);
+                                else {
+                                    console.log(" -- Account " + account.ownerId + " has " + devices.length + " devices");
+                                    // for each device from ACS
+                                    devices.forEach(function (device) {
+                                        // filter on REAL devices
+                                        if (device.simType.indexOf("REAL") >= 0) {
+                                            var isPresent = false;
+                                            // retrieve the current device from ACS into the devoce from DB                                                                                
+                                            devicesInDB.forEach(function (deviceInDB) {
+                                                if (device.deviceId == deviceInDB.deviceId) {
+                                                    // mark the current device as 'present in Db' (will not add it later)
+                                                    isPresent = true
+                                                    // mark the current deviceInDB as 'present in ACS' (will not remove it later)
+                                                    deviceInDB.present = true;
+                                                    // check the status change
+                                                    if (device.connected != deviceInDB.connected)
+                                                        Device.update({ _id: deviceInDB._id }, device, function (err, savedDevice) {
+                                                            if (err) sendError(account, err);
+                                                            else updateDeviceStatus(account, device)
+                                                        })
+                                                }
+                                            })
+                                            // save the new device into DB
+                                            if (!isPresent) Device(device).save(function (err, savedDevice) {
+                                                if (err) sendError(account, err);
+                                                else deviceAdded(account, device)
+                                            })
+                                        }
+                                    })
+                                    devicesInDB.forEach(function (deviceInDB) {
+                                        if (!deviceInDB.present)
+                                            Device.find({ _id: deviceInDB._id }).remove(function (err) {
+                                                if (err) sendError(account, err);
+                                                else deviceRemoved(account, deviceInDB)
+                                            });
+                                    })
+                                }
+                            })
                     });
             })
         });

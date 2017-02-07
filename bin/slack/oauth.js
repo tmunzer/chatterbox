@@ -8,13 +8,14 @@ var https = require('https');
  * @param {String} slackAccount.clientSecret - Slack Developper Account secret
  * @param {String} slackAccount.redirectUrl - Slack Developper Account redirectUrl
  *  */
-module.exports.getPermanentToken = function (code, slackAccount, callback) {
+module.exports.getPermanentToken = function (code, state, slackAccount, callback) {
     var options = {
         'host': 'slack.com',
         'port': 443,
         'path': '/api/oauth.access?client_id=' + slackAccount.clientID +
         '&client_secret=' + slackAccount.clientSecret +
         '&code=' + code +
+        '&state=' + state +
         '&redirect_uri=' + slackAccount.redirectUrl,
         'method': 'GET'
     };
