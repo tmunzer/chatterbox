@@ -76,7 +76,7 @@ function deviceRemoved(account, device) {
     var message = {
         "attachments": [
             {
-                "title": "Account " + account.ownerId + " -- " + getTitle(device) + " had beed removed to your HMNG account!",
+                "title": "Account " + account.ownerId + " -- " + getTitle(device) + " had beed removed from your HMNG account!",
                 "color": "warning",
                 "text": getText(device)
             }
