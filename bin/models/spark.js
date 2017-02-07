@@ -10,6 +10,7 @@ var SparkSchema = new mongoose.Schema({
     displayName: { type: String, required: true },
     nickName: { type: String, required: true },
     type: { type: String, required: true },
+    roomId: { type: String},
     created_at: { type: Date },
     updated_at: { type: Date }
 });

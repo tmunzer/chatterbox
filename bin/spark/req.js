@@ -36,7 +36,7 @@ module.exports.POST = function (sparkAccessToken, path, data, callback) {
     var options = {
         host: 'api.ciscospark.com',
         port: 443,
-        path: slackPath,
+        path: path,
         method: "POST",
         headers: {
             'Accept': 'application/json',
