@@ -1,11 +1,15 @@
 var mongoose = require('mongoose');
 
 var SparkSchema = new mongoose.Schema({
-    ownerId: { type: String, required: true },
     accessToken: { type: String, required: true },
     refreshToken: { type: String, required: true },
     expireAt: { type: Number, required: true },
     refreshTokenExpiresAt: { type: Number, required: true },    
+    user_id: { type: String, required: true },
+    emails: [{ type: String, required: true }],
+    displayName: { type: String, required: true },
+    nickName: { type: String, required: true },
+    type: { type: String, required: true },
     created_at: { type: Date },
     updated_at: { type: Date }
 });

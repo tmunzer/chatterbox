@@ -2,37 +2,29 @@ var https = require('https');
 
 /**
  * HTTP GET Request
- * @param {Object} xapi - API credentials
- * @param {String} xapi.vpcUrl - ACS server to request
- * @param {String} xapi.ownerId - ACS ownerId
- * @param {String} xapi.accessToken - ACS accessToken
+ * @param {Object} sparkAccessToken - Spark Access Token
  * @param {String} path - path to request the ACS endpoint
  * @param {Object} devAccount - information about the Aerohive developper account to user
  * @param {String} devAccount.clientID - Aerohive Developper Account clientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
-module.exports.GET = function (xapi, devAccount, path, callback) {
+module.exports.GET = function (sparkAccessToken, path, callback) {
     var options = {
-        host: 'hooks.slack.com',
+        host: 'api.ciscospark.com',
         port: 443,
         path: path,
         method: "GET",
         headers: {
-            'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
-            'X-AH-API-CLIENT-ID': devAccount.clientID,
-            'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
-            'Authorization': "Bearer " + xapi.accessToken
+            'Accept': 'application/json',
+            'Authorization': "Bearer " + sparkAccessToken
         }
     };
     httpRequest(options, callback);
 };
 /**
  * HTTP POST Request
- * @param {Object} xapi - API credentials
- * @param {String} xapi.vpcUrl - ACS server to request
- * @param {String} xapi.ownerId - ACS ownerId
- * @param {String} xapi.accessToken - ACS accessToken
+ * @param {Object} sparkAccessToken - Spark Access Token
  * @param {String} path - path to request the ACS endpoint
  * @param {Object} data - data to include to the POST Request
  * @param {Object} devAccount - information about the Aerohive developper account to user
@@ -40,14 +32,15 @@ module.exports.GET = function (xapi, devAccount, path, callback) {
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
-module.exports.POST = function (slackHost, slackPath, data, callback) {
+module.exports.POST = function (sparkAccessToken, path, data, callback) {
     var options = {
-        host: slackHost,
+        host: 'api.ciscospark.com',
         port: 443,
         path: slackPath,
         method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': "Bearer " + sparkAccessToken
         }
     };
     var body = JSON.stringify(data);
@@ -57,28 +50,22 @@ module.exports.POST = function (slackHost, slackPath, data, callback) {
 
 /**
  * HTTP PUT Request
- * @param {Object} xapi - API credentials
- * @param {String} xapi.vpcUrl - ACS server to request
- * @param {String} xapi.ownerId - ACS ownerId
- * @param {String} xapi.accessToken - ACS accessToken
+ * @param {Object} sparkAccessToken - Spark Access Token
  * @param {String} path - path to request the ACS endpoint
  * @param {Object} devAccount - information about the Aerohive developper account to user
  * @param {String} devAccount.clientID - Aerohive Developper Account clientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
-module.exports.PUT = function (xapi, devAccount, path, callback) {
+module.exports.PUT = function (sparkAccessToken, path, callback) {
     var options = {
-        host: xapi.vpcUrl,
+        host: 'api.ciscospark.com',
         port: 443,
         path: path,
         method: "PUT",
         headers: {
-            'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
-            'X-AH-API-CLIENT-ID': devAccount.clientID,
-            'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
-            'Authorization': "Bearer " + xapi.accessToken,
-            'Content-Type': 'application/json'
+            'Accept': 'application/json',
+            'Authorization': "Bearer " + sparkAccessToken
         }
     };
     httpRequest(options, callback);
@@ -86,27 +73,22 @@ module.exports.PUT = function (xapi, devAccount, path, callback) {
 
 /**
  * HTTP DELETE Request
- * @param {Object} xapi - API credentials
- * @param {String} xapi.vpcUrl - ACS server to request
- * @param {String} xapi.ownerId - ACS ownerId
- * @param {String} xapi.accessToken - ACS accessToken
+ * @param {Object} sparkAccessToken - Spark Access Token
  * @param {String} path - path to request the ACS endpoint
  * @param {Object} devAccount - information about the Aerohive developper account to user
  * @param {String} devAccount.clientID - Aerohive Developper Account clientID
  * @param {String} devAccount.clientSecret - Aerohive Developper Account secret
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
-module.exports.DELETE = function (xapi, devAccount, path, callback) {
+module.exports.DELETE = function (sparkAccessToken, path, callback) {
     var options = {
-        host: xapi.vpcUrl,
+        host: 'api.ciscospark.com',
         port: 443,
         path: path,
         method: "DELETE",
         headers: {
-            'X-AH-API-CLIENT-SECRET': devAccount.clientSecret,
-            'X-AH-API-CLIENT-ID': devAccount.clientID,
-            'X-AH-API-CLIENT-REDIRECT-URI': devAccount.redirectUrl,
-            'Authorization': "Bearer " + xapi.accessToken
+            'Accept': 'application/json',
+            'Authorization': "Bearer " + sparkAccessToken
         }
     };
     httpRequest(options, callback);
@@ -117,7 +99,7 @@ function httpRequest(options, callback, body) {
     result.request = {};
     result.result = {};
 
-        
+
     result.request.options = options;
     var req = https.request(options, function (res) {
         result.result.status = res.statusCode;
@@ -133,10 +115,8 @@ function httpRequest(options, callback, body) {
             var request = result.request;
             if (body) request.body = JSON.parse(body);
             else request.body = {};
-            if (data != '') {
-                var dataJSON = data;
-                result.data = dataJSON.data;
-                result.error = dataJSON.error;
+            if (data != '') {                
+                result.data = JSON.parse(data);
             }
             switch (result.result.status) {
                 case 200:

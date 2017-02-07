@@ -1,4 +1,5 @@
 var https = require('https');
+const querystring = require('querystring');
 
 /**
  * HTTP GET Request
@@ -9,14 +10,17 @@ var https = require('https');
  * @param {String} slackAccount.redirectUrl - Slack Developper Account redirectUrl
  *  */
 module.exports.getPermanentToken = function (code, state, slackAccount, callback) {
+    var query = querystring.stringify({
+        client_id: slackAccount.clientID,
+        client_secret: slackAccount.clientSecret,
+        code: code,
+        state: state,
+        redirect_uri:slackAccount.redirectUrl
+    })
     var options = {
         'host': 'slack.com',
         'port': 443,
-        'path': '/api/oauth.access?client_id=' + slackAccount.clientID +
-        '&client_secret=' + slackAccount.clientSecret +
-        '&code=' + code +
-        '&state=' + state +
-        '&redirect_uri=' + slackAccount.redirectUrl,
+        'path': '/api/oauth.access?' + query,
         'method': 'GET'
     };
     var req = https.request(options, function (res) {

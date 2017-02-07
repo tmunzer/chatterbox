@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Slack = require('./slack');
+var Spark = require('./spark');
 
 var AcsSchema = new mongoose.Schema({
     ownerId: { type: String, required: true },
@@ -9,6 +10,7 @@ var AcsSchema = new mongoose.Schema({
     vhmId: { type: String, required: true },
     expireAt: { type: String, required: true },
     slack: [{ type: mongoose.Schema.ObjectId, ref: "Slack" }],
+    spark: [{ type: mongoose.Schema.ObjectId, ref: "Spark" }],
     created_at: { type: Date },
     updated_at: { type: Date }
 });

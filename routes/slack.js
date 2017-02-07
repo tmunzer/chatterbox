@@ -17,7 +17,8 @@ function saveSlack(req, res, slackConfig) {
                 if (account.slack) {
                     var isPresent = false;
                     account.slack.forEach(function (slackEntry) {
-                        if (slackEntry.user_id == slackAccount.user_id
+                        if (slackEntry
+                            && slackEntry.user_id == slackAccount.user_id
                             && slackEntry.team_id == slackAccount.team_name
                             && slackEntry.incoming_webhook.channel == slackAccount.incoming_webhook.channel
                             && slackEntry.incoming_webhook.channel_id == slackAccount.incoming_webhook.channel_id) isPresent = true;
@@ -29,8 +30,8 @@ function saveSlack(req, res, slackConfig) {
                             else console.log("slack account saved");
                         })
                     });
-                    
-                } else console.log("not able to retrieve the slack entry for this account" );
+
+                } else console.log("not able to retrieve the slack entry for this account");
             } else console.log("not able to retrieve the account");
         });
 };

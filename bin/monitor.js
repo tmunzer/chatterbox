@@ -126,7 +126,7 @@ function checkDevices() {
                         // Retrieve the devices status from ACS
                         if (err) sendError(account, err);
                         // only request ACS data if a Slack account or a Spark account are configured
-                        else if (account.slack.length > 0 || account.spark.length > 0)
+                        else if ((account.slack && account.slack.length > 0) || (account.spark && account.spark.length > 0))
                             API.monitor.devices.devices(account, devAccount, function (err, devices) {
                                 if (err) sendError(account, err);
                                 else {
