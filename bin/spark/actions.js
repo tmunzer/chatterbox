@@ -4,7 +4,7 @@ module.exports.room = {
         req.GET(sparkAccessToken, "/v1/rooms", function(err, rooms){cb(err, rooms)})
     },
     create: function (sparkAccessToken, title, cb) {
-        req.POST(sparkAccessToken, "/v1/rooms", title, function(err, room){cb(err, room)})
+        req.POST(sparkAccessToken, "/v1/rooms", {title: title}, function(err, room){cb(err, room)})
     }
 }
 module.exports.message = {

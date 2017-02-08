@@ -40,6 +40,7 @@ module.exports.POST = function (sparkAccessToken, path, data, callback) {
         method: "POST",
         headers: {
             'Accept': 'application/json',
+            'Content-type': 'application/json; charset=utf-8',
             'Authorization': "Bearer " + sparkAccessToken
         }
     };
@@ -138,7 +139,7 @@ function httpRequest(options, callback, body) {
 
 
     // write data to request body
-    req.write(body + '\n');
+    req.write(body+'\n');
     req.end();
 
 
