@@ -31,12 +31,12 @@ function getTitle(device) {
     else return "Device " + device.hostName;
 }
 module.exports.deviceAdded = function (account, device) {
-    var message = "### Account " + account.ownerId + " -- " + getTitle(device) + " had beed added to your HMNG account! \n\n" +
+    var message = "### Account " + account.ownerId + " -- " + getTitle(device) + " has beed added to your HMNG account! \n\n" +
         getText(device)
     send(account, message);
 }
 module.exports.deviceRemoved = function (account, device) {
-    var message = "### Account " + account.ownerId + " -- " + getTitle(device) + " had beed removed from your HMNG account!\n\n" +
+    var message = "### Account " + account.ownerId + " -- " + getTitle(device) + " has beed removed from your HMNG account!\n\n" +
         getText(device);
     send(account, message);
 }

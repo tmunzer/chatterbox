@@ -34,45 +34,54 @@ function send(account, message) {
     })
 }
 
-module.exports.deviceAdded = function (account, device) {
-    var message = {
-        "attachments": [
-            {
-                "title": "Account " + account.ownerId + " -- " + getTitle(device) + " had beed added to your HMNG account!",
-                "color": "#2196f3",
-                "text": getText(device)
-            }
-        ]
-    };
-    send(account, message);
+function deviceAdded(account, devices) {
+    var messages = { "attachments": [] };
+    devices.forEach(function (device) {
+        messages.attachments.push({
+            "title": "Account " + account.ownerId + " -- " + getTitle(device) + " has beed added to your HMNG account!",
+            "color": "#2196f3",
+            "text": getText(device)
+        })
+    })
+    send(account, messages);
 }
-module.exports.deviceRemoved = function (account, device) {
-    var message = {
-        "attachments": [
-            {
-                "title": "Account " + account.ownerId + " -- " + getTitle(device) + " had beed removed from your HMNG account!",
-                "color": "warning",
-                "text": getText(device)
-            }
-        ]
-    };
-    send(account, message);
+function deviceRemoved(account, devices) {
+    var messages = { "attachments": [] };
+    devices.forEach(function (device) {
+        messages.attachments.push({
+            "title": "Account " + account.ownerId + " -- " + getTitle(device) + " has beed removed from your HMNG account!",
+            "color": "warning",
+            "text": getText(device)
+        })
+    })
+    send(account, messages);
 }
-module.exports.deviceUpdated = function (account, device) {
-    var title = getTitle(device);
-    if (device.connected == true) title += " is now connected";
-    else title += " is now disconnected";
+function deviceUpdated(account, devices) {
+    var title;
+    var messageConnected = { "attachments": [] };
+    var messageDisconnected = { "attachments": [] };
 
-    var message = {
-        "attachments": [
-            {
+    devices.forEach(function (device) {
+        title = getTitle(device);
+        if (device.connected == true) {
+            title += " is now connected";
+            messageConnected.attachments.push({
                 "title": "Account " + account.ownerId + " -- " + title,
                 "color": getColor(device),
                 "text": getText(device)
-            }
-        ]
-    };
-    send(account, message);
+            });
+        } else {
+            title += " is now disconnected";
+            messageDisconnected.attachments.push({
+                "title": "Account " + account.ownerId + " -- " + title,
+                "color": getColor(device),
+                "text": getText(device)
+            });
+        }
+
+    })
+    send(account, messageConnected);
+    send(account, messageDisconnected);
 }
 module.exports.error = function (account, error) {
     var message = {
@@ -85,4 +94,10 @@ module.exports.error = function (account, error) {
         ]
     };
     send(account, message);
+}
+
+module.exports.sendMessages = function (account, deviceMessages) {
+    if (deviceMessages.added.length > 0) deviceAdded(account, deviceMessages.added);
+    if (deviceMessages.removed.length > 0) deviceRemoved(account, deviceMessages.removed);
+    if (deviceMessages.updated.length > 0) deviceUpdated(account, deviceMessages.updated);
 }

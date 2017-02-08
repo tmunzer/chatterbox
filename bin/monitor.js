@@ -13,18 +13,9 @@ var sparkMessage = require("./spark/messages");
 
 
 
-function updateDeviceStatus(account, device) {
-    slackMessage.deviceUpdated(account, device);
-    sparkMessage.deviceUpdated(account, device);
-}
-
-function deviceAdded(account, device) {
-    slackMessage.deviceAdded(account, device);
-    sparkMessage.deviceAdded(account, device);
-}
-function deviceRemoved(account, device) {
-    slackMessage.deviceRemoved(account, device);
-    sparkMessage.deviceRemoved(account, device);
+function sendMessages(account, deviceMessages) {
+    slackMessage.sendMessages(account, deviceMessages);
+    //sparkMessage.sendMessages(account, deviceMessages);
 }
 
 function sendError(account, error) {
@@ -53,6 +44,8 @@ function checkDevices() {
                             API.monitor.devices.devices(account, devAccount, function (err, devices) {
                                 if (err) sendError(account, err);
                                 else {
+                                    var deviceMessages = { added: [], removed: [], updated: [] }
+                                    var devicesDone = 0;
                                     console.log(" -- Account " + account.ownerId + " has " + devices.length + " devices");
                                     // for each device from ACS
                                     devices.forEach(function (device) {
@@ -69,25 +62,45 @@ function checkDevices() {
                                                     // check the status change
                                                     if (device.connected != deviceInDB.connected)
                                                         Device.update({ _id: deviceInDB._id }, device, function (err, savedDevice) {
+                                                            devicesDone++;
                                                             if (err) sendError(account, err);
-                                                            else updateDeviceStatus(account, device)
+                                                            else deviceMessages.updated.push(device);
+                                                            console.log(devicesDone, devices.length);
+                                                            if (devicesDone == devices.length) sendMessages(account, deviceMessages);
                                                         })
+                                                    else {
+                                                        devicesDone++;
+                                                        console.log(devicesDone, devices.length);
+                                                        if (devicesDone == devices.length) sendMessages(account, deviceMessages);
+                                                    }
                                                 }
                                             })
                                             // save the new device into DB
                                             if (!isPresent) Device(device).save(function (err, savedDevice) {
+                                                devicesDone++;
                                                 if (err) sendError(account, err);
-                                                else deviceAdded(account, device)
+                                                else deviceMessages.added.push(device);
+                                                console.log(devicesDone, devices.length);
+                                                if (devicesDone == devices.length) sendMessages(account, deviceMessages);
                                             })
+                                        } else {
+                                            // SIMU +1
+                                            devicesDone++;
+                                            console.log(devicesDone, devices.length);
+                                            if (devicesDone == devices.length) sendMessages(account, deviceMessages);
                                         }
                                     })
                                     devicesInDB.forEach(function (deviceInDB) {
                                         if (!deviceInDB.present)
                                             Device.find({ _id: deviceInDB._id }).remove(function (err) {
+                                                devicesDone++;
                                                 if (err) sendError(account, err);
-                                                else deviceRemoved(account, deviceInDB)
+                                                else deviceMessages.removed.push(deviceInDB);
+                                                console.log(devicesDone, devices.length);
+                                                if (devicesDone == devices.length) sendMessages(account, deviceMessages);
                                             });
                                     })
+
                                 }
                             })
                     });
