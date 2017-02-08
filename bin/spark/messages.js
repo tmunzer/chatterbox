@@ -1,42 +1,23 @@
 var sparkApi = require("./actions");
-
-function createRoom(account, cb) {
-    sparkApi.room.create(account.spark.accessToken, "Aerohive ACS", function (err, room) {
-        var spark = account.spark;
-        spark.roomId = room.id;
-        Spark.update({ _id: spark._id }, spark, function (err, savedSpark) {
-            if (err) console.log(err);
-            else cb(roomId);
-        });
-    })
-}
-
-function getRoomId(account, cb) {
-    if (!account.spark.roomId) sparkApi.room.list(account.spark.accessToken, function (err, res) {
-        if (err) console.log(err);
-        else if (res) {
-            var roomExists = false;
-            res.forEach(function (room) {
-                if (room.title == "Aerohive ACS") {
-                    var spark = account.spark;
-                    roomExists = true;
-                    spark.roomId = room.id;
-                    Spark.update({ _id: spark._id }, spark, function (err, savedSpark) {
-                        if (err) console.log(err);
-                        else cb(roomId);
-                    });
-                }
-            })
-            if (!roomExists) createRoom(account, cb);
-        } else createRoom(account, cb);
-    })
-    else cb(account.spark.roomId);
-}
+var Spark = require("./../models/spark");
 
 function send(account, message) {
     account.spark.forEach(function (sparkAccount) {
-        getRoomId(account, function (roomId) {
-            sparkApi.message.create(account.spark.accessToken)
+        sparkApi.getUserRoomId(sparkAccount, function (err, roomId) {
+            if (err) console.log(err);
+            else sparkApi.message.create(sparkAccount.accessToken, { roomId: sparkAccount.roomId, markdown: message }, function (err, data) {
+                if (err) console.log("ERR", err);
+                //@TODO need to create only one room!!!
+                else if (data.errors && data.message == 'Could not find a room with provided ID.') {
+                    sparkApi.room.create(sparkAccount.accessToken, "Aerohive ACS", function (err, room) {
+                        Spark.update({_id: sparkAccount._id}, {roomId: room.id}, function(err, newRoom){
+                            sparkApi.message.create(sparkAccount.accessToken, { roomId: room.id, markdown: message }, function (err, data) {
+                                console.log(err, data);
+                            })
+                        })
+                    })
+                }
+            })
         })
     })
 }
@@ -50,12 +31,12 @@ function getTitle(device) {
     else return "Device " + device.hostName;
 }
 module.exports.deviceAdded = function (account, device) {
-    var message = "# Account " + account.ownerId + " -- " + getTitle(device) + " had beed added to your HMNG account! \n\n" +
+    var message = "### Account " + account.ownerId + " -- " + getTitle(device) + " had beed added to your HMNG account! \n\n" +
         getText(device)
     send(account, message);
 }
 module.exports.deviceRemoved = function (account, device) {
-    var message = "# Account " + account.ownerId + " -- " + getTitle(device) + " had beed removed from your HMNG account!\n\n" +
+    var message = "### Account " + account.ownerId + " -- " + getTitle(device) + " had beed removed from your HMNG account!\n\n" +
         getText(device);
     send(account, message);
 }
@@ -64,20 +45,13 @@ module.exports.deviceUpdated = function (account, device) {
     if (device.connected == true) title += " is now connected";
     else title += " is now disconnected";
 
-    var message = "# Account " + account.ownerId + " -- " + title + "\n\n" +
+    var message = "### Account " + account.ownerId + " -- " + title + "\n\n" +
         getText(device);
     send(account, message);
 }
 
 module.exports.error = function (account, error) {
-    var message = {
-        "attachments": [
-            {
-                "title": "Account " + account.ownerId + " -- Error while processing data",
-                "color": "danger",
-                "text": JSON.stringify(error)
-            }
-        ]
-    };
+    var message = "### Account " + account.ownerId + " -- Error while processing data\n\n" +
+        JSON.stringify(error)
     send(account, message);
 }

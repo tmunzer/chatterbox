@@ -37,6 +37,7 @@ function checkDevices() {
     Acs
         .find({})
         .populate("slack")
+        .populate("spark")
         .exec(function (err, accounts) {
             // Loop on ACS accounts
             if (err) sendError(account, err);
