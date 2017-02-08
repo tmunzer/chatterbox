@@ -106,6 +106,12 @@ module.exports.error = function (account, error) {
 }
 
 module.exports.sendMessages = function (account, devices) {
+    // @TODO need changes:
+    // #1: check if roomId is in the DB
+    // #1.1 if not, create it
+    // #1.2 if yes, check if the room still exists for the account
+    // #1.2.1 if not, create it
+    // #2 send messages
     deviceAdded(account, devices.added, function (err) {
         if (err) console.log(err);
         else
