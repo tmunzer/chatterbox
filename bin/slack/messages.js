@@ -96,8 +96,8 @@ module.exports.error = function (account, error) {
     send(account, message);
 }
 
-module.exports.sendMessages = function (account, deviceMessages) {
-    if (deviceMessages.added.length > 0) deviceAdded(account, deviceMessages.added);
-    if (deviceMessages.removed.length > 0) deviceRemoved(account, deviceMessages.removed);
-    if (deviceMessages.updated.length > 0) deviceUpdated(account, deviceMessages.updated);
+module.exports.sendMessages = function (account, devices) {
+    if (devices.added.length > 0) deviceAdded(account, devices.added);
+    if (devices.removed.length > 0) deviceRemoved(account, devices.removed);
+    if (devices.updated.length > 0) deviceUpdated(account, devices.updated);
 }
