@@ -14,7 +14,7 @@ function sendWithRetry(sparkAccount, message, retry, cb) {
                     sparkApi.createRoom(sparkAccount, function (err, room) {
                         sendWithRetry(sparkAccount, message, retry + 1, cb);
                     })
-                } else cb(null);
+                } 
             })
         })
     else cb("max retry reached");
