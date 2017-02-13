@@ -36,7 +36,7 @@ var getUserRoomId = function (sparkAccount, cb) {
         // if users has rooms
         else if (rooms) {
             var roomExists = false;
-            sparkRoom.items.forEach(function (room) {
+            rooms.items.forEach(function (room) {
                 if (room.title == "Aerohive ACS") {
                     roomExists = true;
                     // if we find the room, save it into the DB
