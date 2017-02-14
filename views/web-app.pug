@@ -157,40 +157,36 @@ html
                                                 th(md-column style="width: 5%")
                                                     div
                                                         md-checkbox(ng-change="selectAllSpark()" ng-disabled="spark_data.length <= 0" ng-model="selectAllChecked" class="md-accent" aria-label="Select All")
-                                                th(md-column md-order-by="team_id")
-                                                    span team_id
-                                                th(md-column md-order-by="team_name")
-                                                    span team_name
                                                 th(md-column md-order-by="user_id")
                                                     span user_id
-                                                th(md-column md-order-by="scope")
-                                                    span scope
-                                                th(md-column md-order-by="incoming_webhook.channel")
-                                                    span Webhook channel
-                                                th(md-column md-order-by="incoming_webhook.channel_id")
-                                                    span Webhook channel_id
-                                                th(md-column md-order-by="incoming_webhook.configuration_url")
-                                                    span Webhook configuration_url
-                                                th(md-column md-order-by="incoming_webhook.url")
-                                                    span Webhook url
-                                                th(md-column md-order-by="access_token")
-                                                    span access_token
+                                                th(md-column md-order-by="displayName")
+                                                    span displayName
+                                                th(md-column md-order-by="nickName")
+                                                    span nickName
+                                                th(md-column md-order-by="emails")
+                                                    span emails
+                                                th(md-column md-order-by="accessToken")
+                                                    span accessToken
+                                                th(md-column md-order-by="expireAt")
+                                                    span expireAt
+                                                th(md-column md-order-by="refreshToken")
+                                                    span refreshToken
+                                                th(md-column md-order-by="refreshTokenExpiresAt")
+                                                    span refreshTokenExpiresAt
                                         tbody(md-body)
                                             tr(md-row md-select="spark" md-select-id="spark._id" ng-repeat="spark in spark_data | orderBy: spark_query.order" ng-click="selectOneSpark(spark, true)")
                                                 td(md-cell)
                                                     div
                                                         md-checkbox(ng-model="spark.selected" class="md-accent" ng-change="selectOneSpark(spark, false)" ng-click="$event.stopPropagation();" aria-label="Select spark account")
-                                                td(md-cell) {{spark.team_id}}
-                                                td(md-cell) {{spark.team_name}}
                                                 td(md-cell) {{spark.user_id}}
-                                                td(md-cell) {{spark.scope}}
-                                                td(md-cell) {{spark.incoming_webhook.channel}}
-                                                td(md-cell) {{spark.incoming_webhook.channel_id}}
-                                                td(md-cell) 
-                                                    a(ng-href="{{spark.incoming_webhook.configuration_url}}" target="_blank") {{spark.incoming_webhook.configuration_url}}
-                                                td(md-cell) 
-                                                    a(ng-href="{{spark.incoming_webhook.url}}" target="_blank") {{spark.incoming_webhook.url}}
-                                                td(md-cell) {{spark.access_token}}                                                            
+                                                td(md-cell) {{spark.displayName}}
+                                                td(md-cell) {{spark.nickName}}
+                                                td(md-cell) {{spark.emails}}
+                                                td(md-cell) {{spark.accessToken}}
+                                                td(md-cell) {{spark.expireAt}}
+                                                td(md-cell) {{spark.refreshToken}}                                                    
+                                                td(md-cell) {{refreshTokenExpiresAt}} 
+
                                 md-table-pagination(md-limit="spark_query.limit" md-limit-options="[5, 10, 15]" md-page="spark_query.page" md-total="{{spark_data.length}}" md-page-select)
         
         
