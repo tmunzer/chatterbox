@@ -133,5 +133,5 @@ chatterbox.controller('AppCtrl', function ($scope, SlackService, SparkService) {
     });
 
     $scope.updateSlackAccounts();
-    $scope.updateSlackAccounts();
+    $scope.updateSparkAccounts();
 });
