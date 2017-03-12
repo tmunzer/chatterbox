@@ -14,7 +14,9 @@ var events = require('events');
 global.eventEmitter = new events.EventEmitter();
 
 var app = express();
-app.use(morgan('combined'))
+app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
+  skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0}
+}));
 
 //===============MONGODB=================
 var mongoose = require('mongoose');
