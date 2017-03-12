@@ -153,8 +153,8 @@ function httpRequest(options, callback, body) {
                     if (body) request.body = JSON.parse(body);
                     else request.body = {};
                     if (data != '') {
-                        if (data.length > 400) console.info("\x1b[34mREQUEST DATA\x1b[0m:", data.substr(0, 400) + '...');
-                        else console.info("\x1b[34mREQUEST DATA\x1b[0m:", data);
+                        if (data.length > 400) console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data.substr(0, 400) + '...');
+                        else console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data);
                         console.log(data);
                         var dataJSON = JSON.parse(data);
                         result.data = dataJSON.data;
