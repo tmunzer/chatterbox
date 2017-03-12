@@ -1,6 +1,8 @@
 # chatterbox
 
 This is a Free web app based on the Aerohive monitoring APIs, and using Slack and Spark APIs to send alert messages to Slack and Spark accounts.
+This application is monitoring Aerohive Devices with ACS APIs, and send message when a device is added/removed/connected/disconnected.
+
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
