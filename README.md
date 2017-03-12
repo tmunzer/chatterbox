@@ -7,7 +7,7 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  
 This application is publicly available [here](https://chatterbox.ah-lab.fr) (You will need a HiveManager NG account).
-![chatterbox](https://github.com/tmunzer/identity/blob/master/chatterbox.png?raw=true)
+![chatterbox](https://github.com/chatterbox/identity/blob/master/chatterbox.png?raw=true)
 
 ## Install
 This Reference Application can be used as a standalone Application, or it can be deployed as a Docker Image.
