@@ -23,7 +23,7 @@ global.db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-  console.log("Connected to MONGODB");
+  console.info("\x1b[32minfo\x1b[0m:","Connected to MONGODB");
 });
 
 mongoose.connect('mongodb://'+ mongoConfig.host +'/' + mongoConfig.base);

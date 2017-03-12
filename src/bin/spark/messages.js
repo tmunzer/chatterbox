@@ -14,7 +14,7 @@ function sendWithRetry(sparkAccount, message, retry, cb) {
                     sparkApi.createRoom(sparkAccount, function (err, room) {
                         sendWithRetry(sparkAccount, message, retry + 1, cb);
                     })
-                } 
+                }
             })
         })
     else cb("max retry reached");
@@ -87,7 +87,6 @@ function deviceConnected(account, devices, cb) {
     if (devices.length > 0) {
         var message = "### Account " + account.ownerId + " -- Connected Devices\n\n";
         devices.forEach(function (device) {
-            console.log(device);
             if (device.connected == true) {
                 devicesNumber++;
                 message += "#### " + getTitle(device) + "\n\n" +
@@ -113,16 +112,16 @@ module.exports.sendMessages = function (account, devices) {
     // #1.2.1 if not, create it
     // #2 send messages
     deviceAdded(account, devices.added, function (err) {
-        if (err) console.log(err);
+        if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
         else
             deviceRemoved(account, devices.removed, function (err) {
-                if (err) console.log(err);
+                if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
                 else
                     deviceDisconnected(account, devices.updated, function (err) {
-                        if (err) console.log(err);
+                        if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
                         else
                             deviceConnected(account, devices.updated, function (err) {
-                                if (err) console.log(err);
+                                if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
                             });
                     });
             });

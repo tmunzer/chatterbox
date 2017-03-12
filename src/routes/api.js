@@ -30,7 +30,7 @@ router.delete("/slack", function (req, res) {
                     ids.forEach(function (id) {
                         account.slack.remove(id);
                         Slack.findById(id).remove(function(err){
-                            if (err) console.log(err);
+                            if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
                         })
                     })
                     account.save(function (err) {
@@ -66,7 +66,7 @@ router.delete("/spark", function (req, res) {
                     ids.forEach(function (id) {
                         account.spark.remove(id);
                         Spark.findById(id).remove(function(err){
-                            if (err) console.log(err);
+                            if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
                         })
                     })
                     account.save(function (err) {

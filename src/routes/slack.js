@@ -26,13 +26,13 @@ function saveSlack(req, res, slackConfig) {
                     if (!isPresent) Slack(slackConfig).save(function (err, savedConfig) {
                         account.slack.push(savedConfig);
                         account.save(function (err, savedAccount) {
-                            if (err) console.log(err);
-                            else console.log("slack account saved");
+                            if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
+                            else console.info("\x1b[32minfo\x1b[0m:","slack account saved");
                         })
                     });
 
-                } else console.log("not able to retrieve the slack entry for this account");
-            } else console.log("not able to retrieve the account");
+                } else console.error("\x1b[31mERROR\x1b[0m:", "not able to retrieve the slack entry for this account");
+            } else console.error("\x1b[31mERROR\x1b[0m:", "not able to retrieve the account");
         });
 };
 
@@ -49,7 +49,7 @@ router.get('/oauth', function (req, res) {
             OAuth.getPermanentToken(authCode, req.session.state, slackAccount, function (data) {
                 if (data.error) Error.render(data.error, "conf", req, res);
                 else {
-                    if (data.warning) console.log(data.warning);
+                    if (data.warning) console.error("\x1b[31mERROR\x1b[0m:", data.warning);
                     if (data.ok) {
                         var slackData = data;
                         slackData.host = slackData.incoming_webhook.url.replace("https://", "").split("/")[0];

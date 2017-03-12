@@ -65,7 +65,7 @@ function checkDevices() {
                                     var deviceMessages = { added: [], removed: [], updated: [] }
                                     // ACS Devices = "nothing to do" + "updated devices" + "added devices" + "SIMU"
                                     var devicesDone = 0;
-                                    console.log(" -- Account " + account.ownerId + " has " + devices.length + " devices");
+                                    console.info("\x1b[32minfo\x1b[0m:"," -- Account " + account.ownerId + " has " + devices.length + " devices");
                                     // for each device from ACS
                                     devices.forEach(function (device) {
                                         // filter on REAL devices
@@ -115,21 +115,19 @@ function checkDevices() {
 }
 
 module.exports.devices = function () {
-    //===============CREATE CRON=================
-    console.log("=============");
-    console.log("init turn");
+    //===============CREATE CRON=================    
+    console.info("\x1b[32minfo\x1b[0m:","init turn");
     checkDevices();
     try {
         new CronJob({
             cronTime: "0 */1 * * * *",
-            onTick: function () {
-                console.log("=============");
-                console.log("new turn");
+            onTick: function () {                
+                console.info("\x1b[32minfo\x1b[0m:","new turn");
                 checkDevices();
             },
             start: true
         });
     } catch (ex) {
-        logger.warn("cron pattern not valid");
+        console.error("\x1b[31mERROR\x1b[0m:","cron pattern not valid");
     }
 }

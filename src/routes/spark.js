@@ -25,23 +25,23 @@ function saveSpark(req, res, sparkData) {
                             isPresent = true;
                             if (sparkEntry.roomId != sparkData.roomId) {
                                 Spark.update({ _id: sparkEntry._id }, sparkData, function (err, savedData) {
-                                    if (err) console.log(err);
-                                    else console.log("Spark account saved");
+                                    if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
+                                    else console.info("\x1b[32minfo\x1b[0m:", "Spark account saved");
                                 })
                             }
                         }
                     })
                     if (!isPresent) Spark(sparkData).save(function (err, savedData) {
-                        if (err) console.log(err);
+                        if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
                         account.spark.push(savedData);
                         account.save(function (err, savedAccount) {
-                            if (err) console.log(err);
-                            else console.log("Spark account saved");
+                            if (err) console.error("\x1b[31mERROR\x1b[0m:", err);
+                            else console.info("\x1b[32minfo\x1b[0m:", "Spark account saved");
                         })
                     });
 
-                } else console.log("not able to retrieve the Spark entry for this account");
-            } else console.log("not able to retrieve the account");
+                } else console.error("\x1b[31mERROR\x1b[0m:", "not able to retrieve the Spark entry for this account");
+            } else console.error("\x1b[31mERROR\x1b[0m:", "not able to retrieve the account");
         });
 };
 
@@ -69,8 +69,7 @@ router.get('/oauth', function (req, res) {
                             sparkData.displayName = user.displayName;
                             sparkData.nickName = user.nickName;
                             sparkData.type = user.type;
-                            SparkApi.getUserRoomId(sparkData, function (err, roomId) {
-                                console.log(roomId);
+                            SparkApi.getUserRoomId(sparkData, function (err, roomId) {                                
                                 sparkData.roomId = roomId;
                                 saveSpark(req, res, sparkData);
                             })

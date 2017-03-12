@@ -49,9 +49,8 @@ var getUserRoomId = function (sparkAccount, cb) {
         } else createRoom(sparkAccount, cb);
     })
 }
-function createRoom(sparkAccount, cb) {
-    console.log("=====");
-    console.log(sparkAccount);
+function createRoom(sparkAccount, cb) {    
+    console.info("\x1b[32minfo\x1b[0m:",sparkAccount);
     sparkRoom.create(sparkAccount.accessToken, "Aerohive ACS", function (err, room) {
         // if the spark account already exists into the DB, add the roomId to it
         if (sparkAccount._id) saveUserRoomId(sparkAccount, room.id, cb);

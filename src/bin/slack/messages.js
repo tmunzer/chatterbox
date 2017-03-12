@@ -28,8 +28,8 @@ function send(account, message) {
     account.slack.forEach(function (slackAccount) {
         var slack = getHost(slackAccount);
         slackPost(slack.slackHost, slack.slackPath, message, function (err, data) {
-            if (err) console.log(err);
-            else console.log(data);
+            if (err) cconsole.error("\x1b[31mERROR\x1b[0m:",err);
+            else console.info("\x1b[32minfo\x1b[0m:",data);
         })
     })
 }

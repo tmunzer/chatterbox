@@ -31,8 +31,8 @@ module.exports.getPermanentToken = function (code, sparkAccount, callback) {
     };
 
     var req = https.request(options, function (res) {
-        console.log('STATUS: ' + res.statusCode);
-        console.log('HEADERS: ' + JSON.stringify(res.headers));
+        console.info('\x1b[34mREQUEST QUERY\x1b[0m:', options.path);
+        console.info('\x1b[34mREQUEST STATUS\x1b[0m:',res.result.status);
         res.setEncoding('utf8');
         res.on('data', function (data) {
             callback(JSON.parse(data));
