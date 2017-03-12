@@ -1,7 +1,4 @@
 #!/bin/sh
-cd /app
-npm install
-bower install --allow-root
 cd /app/bin
 if [ "$1" ]
 then
