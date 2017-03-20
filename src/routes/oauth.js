@@ -4,17 +4,25 @@ var OAuth = require("../bin/aerohive/api/oauth");
 var devApp = require('../config.js').devAccount;
 var slackApp = require('../config.js').slackAccount;
 var Acs = require('../bin/models/acs');
+var Error = require('../routes/error');
 
 /*================================================================
  ADMIN ACS OAUTH
  ================================================================*/
 router.get('/reg', function (req, res) {
-    if (req.query.error) {
-        res.render('error', { error: { message: req.query.error } });
-    } else if (req.query.authCode) {
+    if (req.query.error) Error.render(
+        { status: 401, message: "OAuth process error. The authorization server responded " + req.query.error },
+        req.originalUrl,
+        req,
+        res);
+    else if (req.query.authCode) {
         var authCode = req.query.authCode;
         OAuth.getPermanentToken(authCode, devApp, function (data) {
-            if (data.error) res.render('error', { error: data.error })
+            if (data.error) Error.render(
+                { status: 401, message: "OAuth process error. The authorization didn't validated the authorization code: " + req.query.error },
+                req.originalUrl,
+                req,
+                res);
             else if (data.data) {
                 var numAccounts = 0;
                 for (var owner in data.data) {
@@ -33,13 +41,21 @@ router.get('/reg', function (req, res) {
                     Acs.
                         findOne({ ownerId: account.ownerId, vpcUrl: account.vpcUrl, vhmId: account.vhmId })
                         .exec(function (err, accountInDb) {
-                            if (err) res.render('error', { error: { message: err } });
+                            if (err) Error.render(
+                                { status: 500, message: err },
+                                req.originalUrl,
+                                req,
+                                res);
                             else if (accountInDb) {
                                 accountInDb.accessToken = account.accessToken;
                                 accountInDb.refreshToken = account.refreshToken;
                                 accountInDb.expireAt = account.expireAt;
                                 accountInDb.save(function (err, account) {
-                                    if (err) res.render('error', { error: { message: err } })
+                                    if (err) Error.render(
+                                        { status: 500, message: err },
+                                        req.originalUrl,
+                                        req,
+                                        res);
                                     else {
                                         req.session.xapi = {
                                             rejectUnauthorized: true,
@@ -55,7 +71,11 @@ router.get('/reg', function (req, res) {
                             }
                             else {
                                 Acs(account).save(function (err, account) {
-                                    if (err) res.render('error', { error: { message: err } })
+                                    if (err) Error.render(
+                                        { status: 500, message: err },
+                                        req.originalUrl,
+                                        req,
+                                        res);
                                     else {
                                         req.session.xapi = {
                                             rejectUnauthorized: true,
@@ -72,10 +92,18 @@ router.get('/reg', function (req, res) {
                         })
 
                 }
-                else res.render('error', { error: { message: 'unable to save data... ' } })
+                else Error.render(
+                    { status: 500, message: "unable to save data..." },
+                    req.originalUrl,
+                    req,
+                    res);
             }
         });
-    } else res.render('error', { error: { message: "Unkown error..." } });
+    } else Error.render(
+            { status: 500, message: "Unable to retrieve the authorization code from the authorization server" },
+            req.originalUrl,
+            req,
+            res);
 });
 
 
