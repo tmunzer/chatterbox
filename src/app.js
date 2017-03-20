@@ -5,17 +5,13 @@ var morgan = require('morgan')
 var parseurl = require('parseurl');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var MongoDBStore = require('connect-mongodb-session')(session);
 var favicon = require('serve-favicon');
 
-global.console = require('winston');
-console.level = 'debug';
-
-var events = require('events');
-global.eventEmitter = new events.EventEmitter();
 
 var app = express();
 app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
-  skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0}
+  skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0 }
 }));
 
 //===============MONGODB=================
@@ -25,10 +21,10 @@ global.db = mongoose.connection;
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
-  console.info("\x1b[32minfo\x1b[0m:","Connected to MONGODB");
+  console.info("\x1b[32minfo\x1b[0m:", "Connected to MONGODB");
 });
 
-mongoose.connect('mongodb://'+ mongoConfig.host +'/' + mongoConfig.base);
+mongoose.connect('mongodb://' + mongoConfig.host + '/' + mongoConfig.base);
 
 
 
@@ -36,11 +32,15 @@ mongoose.connect('mongodb://'+ mongoConfig.host +'/' + mongoConfig.base);
 app.use(session({
   secret: 'dsHhCAyYdqYAu25Km5EtkLMZm7XD',
   resave: true,
+  store: new MongoDBStore({
+    uri: 'mongodb://' + mongoConfig.host + '/express-session',
+    collection: 'chatterbox'
+  }),
   saveUninitialized: true,
   cookie: {
     maxAge: 30 * 60 * 1000 // 30 minutes
   }
-})); ;
+}));
 
 
 // view engine setup
@@ -53,7 +53,7 @@ app.set('view engine', 'pug');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower_components',  express.static('../bower_components'));
+app.use('/bower_components', express.static('../bower_components'));
 
 var slack = require('./routes/slack');
 app.use('/slack/', slack);
@@ -70,9 +70,6 @@ app.use('/api', api);
 var login = require('./routes/login');
 app.use('/', login);
 
-app.get('*', function(req, res) {
-    res.redirect('/web-app/');
-});
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
@@ -85,7 +82,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
+  app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
       message: err.message,
@@ -93,16 +90,18 @@ if (app.get('env') === 'development') {
     });
   });
 }
-
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
+  if (err.status == 404) err.message = "The requested url "+req.originalUrl+" was not found on this server.";
   res.status(err.status || 500);
   res.render('error', {
+    status: err.status,
     message: err.message,
     error: {}
   });
 });
+
 
 var monitor = require("./bin/monitor");
 monitor.devices();
