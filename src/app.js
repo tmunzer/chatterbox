@@ -19,9 +19,9 @@ var mongoose = require('mongoose');
 var mongoConfig = require('./config').mongoConfig;
 global.db = mongoose.connection;
 
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on('error', console.error.bind(console, '\x1b[31mERROR\x1b[0m: unable to connect to mongoDB on ' + mongoConfig.host + ' server'));
 db.once('open', function () {
-  console.info("\x1b[32minfo\x1b[0m:", "Connected to MONGODB");
+  console.info("\x1b[32minfo\x1b[0m:", "Connected to mongoDB on " + mongoConfig.host + " server");
 });
 
 mongoose.connect('mongodb://' + mongoConfig.host + '/' + mongoConfig.base);
@@ -71,7 +71,7 @@ var login = require('./routes/login');
 app.use('/', login);
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -93,7 +93,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
-  if (err.status == 404) err.message = "The requested url "+req.originalUrl+" was not found on this server.";
+  if (err.status == 404) err.message = "The requested url " + req.originalUrl + " was not found on this server.";
   res.status(err.status || 500);
   res.render('error', {
     status: err.status,
