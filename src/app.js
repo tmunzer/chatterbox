@@ -16,6 +16,7 @@ app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":
 
 //===============MONGODB=================
 var mongoose = require('mongoose');
+mongoose.Promise = require('bluebird');
 var mongoConfig = require('./config').mongoConfig;
 global.db = mongoose.connection;
 
