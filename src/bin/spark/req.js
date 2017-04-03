@@ -97,19 +97,18 @@ module.exports.DELETE = function (sparkAccessToken, path, callback) {
 };
 
 function httpRequest(options, callback, body) {
-    var result = {};
+    let result = {};
     result.request = {};
     result.result = {};
 
-
     result.request.options = options;
-    var req = https.request(options, function (res) {
+    const req = https.request(options, function (res) {
         result.result.status = res.statusCode;
         console.info('\x1b[34mREQUEST QUERY\x1b[0m:', options.path);
         console.info('\x1b[34mREQUEST STATUS\x1b[0m:',result.result.status);
         result.result.headers = JSON.stringify(res.headers);
         res.setEncoding('utf8');
-        var data = '';
+        let data = '';
         res.on('data', function (chunk) {
             data += chunk;
         });

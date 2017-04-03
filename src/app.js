@@ -1,28 +1,32 @@
-var path = require('path');
+const path = require('path');
 
-var express = require('express');
-var morgan = require('morgan')
-var parseurl = require('parseurl');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var MongoDBStore = require('connect-mongodb-session')(session);
-var favicon = require('serve-favicon');
+const express = require('express');
+const morgan = require('morgan')
+const parseurl = require('parseurl');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const favicon = require('serve-favicon');
 
 
-var app = express();
+const app = express();
 app.use(morgan('\x1b[32minfo\x1b[0m: :remote-addr - :remote-user [:date[clf]] ":method :url HTTP/:http-version" :status :res[content-length]', {
   skip: function (req, res) { return res.statusCode < 400 && req.url != "/" && req.originalUrl.indexOf("/api") < 0 }
 }));
 
 //===============MONGODB=================
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-var mongoConfig = require('./config').mongoConfig;
+const mongoConfig = require('./config').mongoConfig;
 global.db = mongoose.connection;
 
 db.on('error', console.error.bind(console, '\x1b[31mERROR\x1b[0m: unable to connect to mongoDB on ' + mongoConfig.host + ' server'));
 db.once('open', function () {
   console.info("\x1b[32minfo\x1b[0m:", "Connected to mongoDB on " + mongoConfig.host + " server");
+  const refreshAcsToken = require("./bin/refreshAcsToken").auto();
+  const refreshSparkToken = require("./bin/refreshSparkToken").auto();
+  const monitor = require("./bin/monitor");
+  monitor.devices();
 });
 
 mongoose.connect('mongodb://' + mongoConfig.host + '/' + mongoConfig.base);
@@ -56,24 +60,29 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static('../bower_components'));
 
-var slack = require('./routes/slack');
+const slack = require('./routes/slack');
 app.use('/slack/', slack);
 
-var spark = require('./routes/spark');
+const spark = require('./routes/spark');
 app.use('/spark/', spark);
 
-var oauth = require('./routes/oauth');
+const oauth = require('./routes/oauth');
 app.use('/oauth/', oauth);
 
-var api = require('./routes/api');
+const api = require('./routes/api');
 app.use('/api', api);
 
-var login = require('./routes/login');
+const login = require('./routes/login');
 app.use('/', login);
+
+//Otherwise
+app.get("*", function (req, res) {
+  res.redirect("/web-app/");
+})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -103,8 +112,5 @@ app.use(function (err, req, res, next) {
   });
 });
 
-
-var monitor = require("./bin/monitor");
-monitor.devices();
 
 module.exports = app;
