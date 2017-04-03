@@ -8,8 +8,6 @@ function sendWithRetry(sparkAccount, message, retry, cb) {
             if (err) sendWithRetry(sparkAccount, message, retry + 1, cb);
             // try to send the message
             else sparkApi.message.create(sparkAccount.accessToken, { roomId: sparkAccount.roomId, markdown: message }, function (err, data) {
-                console.log(err);
-                console.log(data);
                 if (err) sendWithRetry(sparkAccount, message, retry + 1, cb);
                 //if the room doesn't exists anymore, create it again (this will create it and save it into the DB if needed)
                 else if (data.errors && data.message == 'Could not find a room with provided ID.') {
