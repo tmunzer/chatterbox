@@ -38,7 +38,7 @@ function deviceAdded(account, devices) {
     var messages = { "attachments": [] };
     devices.forEach(function (device) {
         messages.attachments.push({
-            "title": "Account " + account.ownerId + " -- " + getTitle(device) + " has beed added to your HMNG account!",
+            "title": "Account " + account.ownerId + " -- " + getTitle(device) + " has been added to your HMNG account!",
             "color": "#2196f3",
             "text": getText(device)
         })
@@ -49,7 +49,7 @@ function deviceRemoved(account, devices) {
     var messages = { "attachments": [] };
     devices.forEach(function (device) {
         messages.attachments.push({
-            "title": "Account " + account.ownerId + " -- " + getTitle(device) + " has beed removed from your HMNG account!",
+            "title": "Account " + account.ownerId + " -- " + getTitle(device) + " has been removed from your HMNG account!",
             "color": "warning",
             "text": getText(device)
         })
