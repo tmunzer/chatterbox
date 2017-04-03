@@ -52,7 +52,7 @@ function getTitle(device) {
 }
 function deviceAdded(account, devices, cb) {
     if (devices.length > 0) {
-        var message = "### Account " + account.ownerId + " -- Newly added devices to your HMNG account \n\n";
+        var message = "### Account " + account.ownerId + " -- Devices ADDED to your HMNG account \n\n";
         devices.forEach(function (device) {
             message += "#### " + getTitle(device) + " has beed added!\n\n" +
                 getText(device) + "\n\n --- \n\n";
@@ -62,18 +62,18 @@ function deviceAdded(account, devices, cb) {
 }
 function deviceRemoved(account, devices, cb) {
     if (devices.length > 0) {
-        var message = "### Account " + account.ownerId + " -- Newly removed devices to your HMNG account \n\n";
+        var message = "### Account " + account.ownerId + " -- Device REMOVED from your HMNG account \n\n";
         devices.forEach(function (device) {
             message += "#### " + getTitle(device) + " has beed removed!\n\n" +
                 getText(device) + "\n\n --- \n\n";
         })
-        send(account, messages, cb);
+        send(account, message, cb);
     } else cb();
 }
 function deviceDisconnected(account, devices, cb) {
     var devicesNumber = 0;
     if (devices.length > 0) {
-        var message = "### Account " + account.ownerId + " -- Disconnected Devices\n\n";
+        var message = "### Account " + account.ownerId + " -- DISCONNECTER Devices\n\n";
         devices.forEach(function (device) {
             if (device.connected == false) {
                 devicesNumber++;
@@ -88,7 +88,7 @@ function deviceDisconnected(account, devices, cb) {
 function deviceConnected(account, devices, cb) {
     var devicesNumber = 0;
     if (devices.length > 0) {
-        var message = "### Account " + account.ownerId + " -- Connected Devices\n\n";
+        var message = "### Account " + account.ownerId + " -- CONNECTED Devices\n\n";
         devices.forEach(function (device) {
             if (device.connected == true) {
                 devicesNumber++;
