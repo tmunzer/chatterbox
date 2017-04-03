@@ -71,7 +71,7 @@ function deviceRemoved(account, devices, cb) {
 function deviceDisconnected(account, devices, cb) {
     var devicesNumber = 0;
     if (devices.length > 0) {
-        var message = "### Account " + account.ownerId + " -- DISCONNECTER Devices\n\n";
+        var message = "### Account " + account.ownerId + " -- DISCONNECTED Devices\n\n";
         devices.forEach(function (device) {
             if (device.connected == false) {
                 devicesNumber++;

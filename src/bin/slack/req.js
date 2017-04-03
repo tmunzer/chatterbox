@@ -13,7 +13,7 @@ var https = require('https');
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
 module.exports.GET = function (xapi, devAccount, path, callback) {
-    var options = {
+    const options = {
         host: 'hooks.slack.com',
         port: 443,
         path: path,
@@ -41,7 +41,7 @@ module.exports.GET = function (xapi, devAccount, path, callback) {
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
 module.exports.POST = function (slackHost, slackPath, data, callback) {
-    var options = {
+    const options = {
         host: slackHost,
         port: 443,
         path: slackPath,
@@ -69,7 +69,7 @@ module.exports.POST = function (slackHost, slackPath, data, callback) {
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
 module.exports.PUT = function (xapi, devAccount, path, callback) {
-    var options = {
+    const options = {
         host: xapi.vpcUrl,
         port: 443,
         path: path,
@@ -98,7 +98,7 @@ module.exports.PUT = function (xapi, devAccount, path, callback) {
  * @param {String} devAccount.redirectUrl - Aerohive Developper Account redirectUrl
  *  */
 module.exports.DELETE = function (xapi, devAccount, path, callback) {
-    var options = {
+    const options = {
         host: xapi.vpcUrl,
         port: 443,
         path: path,
@@ -120,7 +120,7 @@ function httpRequest(options, callback, body) {
 
 
     result.request.options = options;
-    var req = https.request(options, function (res) {
+    const req = https.request(options, function (res) {
         result.result.status = res.statusCode;
         console.info('\x1b[34mREQUEST QUERY\x1b[0m:', options.path);
         console.info('\x1b[34mREQUEST STATUS\x1b[0m:',result.result.status);
@@ -135,7 +135,7 @@ function httpRequest(options, callback, body) {
             if (body) request.body = JSON.parse(body);
             else request.body = {};
             if (data != '') {
-                var dataJSON = data;
+                const dataJSON = data;
                 result.data = dataJSON.data;
                 result.error = dataJSON.error;
             }
@@ -144,7 +144,7 @@ function httpRequest(options, callback, body) {
                     callback(null, result.data, request);
                     break;
                 default:
-                    var error = {};
+                    let error = {};
                     console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(error));
                     callback(result.error, result.data, request);
                     break;
