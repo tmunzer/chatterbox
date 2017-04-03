@@ -10,8 +10,8 @@ This program is free software: you can redistribute it and/or modify it under th
  
 This application is publicly available [here](https://chatterbox.ah-lab.fr) (You will need a HiveManager NG account).
 ![chatterbox](https://github.com/tmunzer/chatterbox/blob/master/chatterbox.png?raw=true)
-![slack](https://github.com/tmunzer/chatterbox/blob/master/slack.png?raw=true)
-
+<img src="https://github.com/tmunzer/chatterbox/blob/master/slack.png?raw=true" width="54%">
+<img src="https://github.com/tmunzer/chatterbox/blob/master/spark.png?raw=true" width="45%">
 ## Install
 This Reference Application can be used as a standalone Application, or it can be deployed as a Docker Image.
 
