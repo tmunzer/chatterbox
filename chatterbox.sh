@@ -34,6 +34,7 @@ function create_app_container
     -v $PERSISTANT_FOLDER/$APP_NAME/config.js:/app/config.js:ro \
     --link $DB_NAME:mongo \
     --name="$APP_NAME" \
+    --memory=128m \
     --restart="on-failure:5" \
     -e "VIRTUAL_HOST=$NODEJS_VHOST" \
     -e "LETSENCRYPT_HOST=$NODEJS_VHOST" \
