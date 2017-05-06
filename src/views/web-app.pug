@@ -4,7 +4,6 @@ html
         title= title
         meta(name="viewport" content="width=device-width, initial-scale=1")
 
-        link(rel="stylesheet" href="/bower_components/material-design-icons/iconfont/material-icons.css")
         link(rel="stylesheet" href="/bower_components/angular-material/angular-material.min.css")
         link(rel="stylesheet" href="/bower_components/angular-material-data-table/dist/md-data-table.min.css")
         link(rel='stylesheet' href='/css/ah-tm.dashboard.css')
@@ -21,14 +20,11 @@ html
             div.header
             md-toolbar.header.fixed(layout='row')
                 h1.logo.md-toolbar-tools
-                    if custom && custom.logo && custom.logo.enable
-                        img(src=custom.logo.header class="ah-logo")
-                    else
-                        img(src="/images/logo_w.png" alt="Aerohive")
+                    img(src="/images/logo_w.png" alt="Aerohive")
                 span(flex)
                 div(style="display:flex; padding-right: 20px")                           
                     md-button(aria-label="logout" href="/logout/" style="margin: auto;")                        
-                        md-icon(class="material-icons" aria-label="menu") exit_to_app
+                        md-icon(md-svg-src="/images/icons/ic_exit_to_app_white_24px.svg" alt="exit")     
                         span Logout
 
             
@@ -51,21 +47,21 @@ html
 
                                         div.md-toolbar-tools(id='table-search' ng-show="slack_query.show")
                                             md-input-container(md-no-float class="md-block search-tool")
-                                                md-icon.material-icons.search-tool(style="color: white !important;") search
+                                                md-icon.material-icons.search-tool(md-svg-src="/images/icons/ic_search_white_24px.svg")
                                                 input(ng-model="slack_query.filter" class="search-tool" placeholder="Search" style="border-color: rgba(250,250,250,0.3);")
                                             button.md-icon-button.md-button(type="button" ng-click="removeSlackFilter()" aria-label="close")
-                                                md-icon.material-icons close
+                                                md-icon.material-icons(md-svg-src="/images/icons/ic_close_white_24px.svg")
                                                 md-tooltip(md-direction="bottom") Close                                                                    
                                                 div.md-ripple-container
                             
                                         div.md-toolbar-tools(ng-hide="slack_query.show")
                                             div(flex)
                                             button.md-icon-button.md-button(ng-click="slack_query.show = true" aria-label="filter_list")
-                                                md-icon.material-icons search
+                                                md-icon.material-icons(md-svg-src="/images/icons/ic_search_white_24px.svg")
                                                 md-tooltip(md-direction="bottom") Search
                                                 div.md-ripple-container                                                        
                                             md-button.md-icon-button.md-button(ng-click="deleteSlackAccounts()")
-                                                md-icon.material-icons delete
+                                                md-icon.material-icons(md-svg-src="/images/icons/ic_delete_white_24px.svg")
                                                 md-tooltip(md-direction="bottom") Delete
                                     
                                 
@@ -130,21 +126,21 @@ html
 
                                         div.md-toolbar-tools(id='table-search' ng-show="spark_query.show")
                                             md-input-container(md-no-float class="md-block search-tool")
-                                                md-icon.material-icons.search-tool(style="color: white !important;") search
+                                                md-icon.material-icons.search-tool(md-svg-src="/images/icons/ic_search_white_24px.svg")
                                                 input(ng-model="spark_query.filter" class="search-tool" placeholder="Search" style="border-color: rgba(250,250,250,0.3);")
                                             button.md-icon-button.md-button(type="button" ng-click="removeSparkkFilter()" aria-label="close")
-                                                md-icon.material-icons close
+                                                md-icon.material-icons(md-svg-src="/images/icons/ic_close_white_24px.svg")
                                                 md-tooltip(md-direction="bottom") Close                                                                    
                                                 div.md-ripple-container
                             
                                         div.md-toolbar-tools(ng-hide="spark_query.show")
                                             div(flex)
                                             button.md-icon-button.md-button(ng-click="spark_query.show = true" aria-label="filter_list")
-                                                md-icon.material-icons search
+                                                md-icon.material-icons(md-svg-src="/images/icons/ic_search_white_24px.svg")
                                                 md-tooltip(md-direction="bottom") Search
                                                 div.md-ripple-container                                                        
                                             md-button.md-icon-button.md-button(ng-click="deleteSparkAccounts()")
-                                                md-icon.material-icons delete
+                                                md-icon.material-icons(md-svg-src="/images/icons/ic_delete_white_24px.svg")
                                                 md-tooltip(md-direction="bottom") Delete
                                     
                                 
