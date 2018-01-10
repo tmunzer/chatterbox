@@ -126,7 +126,7 @@ module.exports.DELETE = function (xapi, devAccount, path, callback) {
     httpRequest(options, callback);
 };
 
-function httpRequest(options, callback, body){
+function httpRequest(options, callback, body) {
     let result = {};
     result.request = {};
     result.result = {};
@@ -135,7 +135,7 @@ function httpRequest(options, callback, body){
     const req = https.request(options, function (res) {
         result.result.status = res.statusCode;
         console.info('\x1b[34mREQUEST QUERY\x1b[0m:', options.path);
-        console.info('\x1b[34mREQUEST STATUS\x1b[0m:',result.result.status);
+        console.info('\x1b[34mREQUEST STATUS\x1b[0m:', result.result.status);
         result.result.headers = JSON.stringify(res.headers);
         res.setEncoding('utf8');
         let data = '';
@@ -145,7 +145,7 @@ function httpRequest(options, callback, body){
         res.on('end', function () {
             if (data != '') {
                 if (data.length > 400) console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data.substr(0, 400) + '...');
-                else console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data);  
+                else console.info("\x1b[34mRESPONSE DATA\x1b[0m:", data);
                 const dataJSON = JSON.parse(data);
                 result.data = dataJSON.data;
                 result.error = dataJSON.error;
@@ -156,14 +156,20 @@ function httpRequest(options, callback, body){
                     break;
                 default:
                     let error = {};
-                    if (result.error && result.error.status) error.status = result.error.status;
-                    else error.status = result.result.status;
-                    if (result.error && result.error.message) error.message = result.error.message;
-                    else error.message = result.error;
-                    if (result.error && result.error.code) error.code = result.error.code;
-                    else error.code = "";
+                    if (result.error) {
+                        if (result.error.status) error.status = result.error.status;
+                        else error.status = result.result.status;
+                        if (result.error && result.error.message) error.message = result.error.message;
+                        else error.message = result.error;
+                        if (result.error && result.error.code) error.code = result.error.code;
+                        else error.code = "";
+                    } else if (esult.status == 404) {
+                        error.status = 404;
+                        error.message = "Unable to request ACS. Please try to update the API token.";
+                        error.code = "";
+                    }
                     console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
-                    callback(result, result.data);
+                    callback(error, result.data);
                     break;
 
             }
@@ -176,7 +182,7 @@ function httpRequest(options, callback, body){
     });
 
 
-// write data to request body
+    // write data to request body
     req.write(body + '\n');
     req.end();
 
