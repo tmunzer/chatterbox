@@ -43,7 +43,7 @@ function removeOldDevices(devicesInDB, account, deviceMessages) {
 function checkDevices() {
     // Get ACS accounts
     Acs
-        .find({})
+        .where("expireAt").gt(0)
         .populate("slack")
         .populate("spark")
         .exec(function (err, accounts) {
@@ -110,7 +110,7 @@ function checkDevices() {
                                     }
                                 })
                         });
-                        else sendError(account, "ACS Access Token no longer valid for ownerID " + account.ownerId);
+                else sendError(account, "ACS Access Token no longer valid for ownerID " + account.ownerId);
             })
         });
 }

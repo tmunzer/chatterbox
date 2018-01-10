@@ -156,14 +156,14 @@ function httpRequest(options, callback, body){
                     break;
                 default:
                     let error = {};
-                    if (result.error.status) error.status = result.error.status;
+                    if (result.error && result.error.status) error.status = result.error.status;
                     else error.status = result.result.status;
-                    if (result.error.message) error.message = result.error.message;
+                    if (result.error && result.error.message) error.message = result.error.message;
                     else error.message = result.error;
-                    if (result.error.code) error.code = result.error.code;
+                    if (result.error && result.error.code) error.code = result.error.code;
                     else error.code = "";
-                    console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(error));
-                    callback(error, result.data);
+                    console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
+                    callback(result, result.data);
                     break;
 
             }
