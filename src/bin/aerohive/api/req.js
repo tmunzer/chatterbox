@@ -163,7 +163,7 @@ function httpRequest(options, callback, body) {
                         else error.message = result.error;
                         if (result.error && result.error.code) error.code = result.error.code;
                         else error.code = "";
-                    } else if (esult.status == 404) {
+                    } else if (result.status == 404) {
                         error.status = 404;
                         error.message = "Unable to request ACS. Please try to update the API token.";
                         error.code = "";
