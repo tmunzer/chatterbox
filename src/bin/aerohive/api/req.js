@@ -155,45 +155,39 @@ function httpRequest(options, callback, body, retried) {
                     callback(null, result.data);
                     break;
                 case 404:
+                    error.status = 404;
+                    error.message = "Unable to request ACS. Please try to update the API token.";
+                    error.code = "";
+                    console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
                     if (retried != true) httpRequest(options, callback, body, true);
-                    else {
-                        error.status = 404;
-                        error.message = "Unable to request ACS. Please try to update the API token.";
-                        error.code = "";
-                        console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
-                        callback(error, result.data);
-                    };
+                    else callback(error, result.data);
                     break;
                 default:
-                    if (retried != true) httpRequest(options, callback, body, true);
-                    else {
-                        let error = {};
-                        if (result.error) {
-                            if (result.error.status) error.status = result.error.status;
-                            else error.status = result.result.status;
-                            if (result.error && result.error.message) error.message = result.error.message;
-                            else error.message = result.error;
-                            if (result.error && result.error.code) error.code = result.error.code;
-                            else error.code = "";
-                        } else if (result.result) {
-                            error.status = result.result.status;
-                            error.message = "Unable to request ACS. Please try to update the API token.";
-                            error.code = "";
-                        }
-                        console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
-                        callback(error, result.data);
+                    let error = {};
+                    if (result.error) {
+                        if (result.error.status) error.status = result.error.status;
+                        else error.status = result.result.status;
+                        if (result.error && result.error.message) error.message = result.error.message;
+                        else error.message = result.error;
+                        if (result.error && result.error.code) error.code = result.error.code;
+                        else error.code = "";
+                    } else if (result.result) {
+                        error.status = result.result.status;
+                        error.message = "Unable to request ACS. Please try to update the API token.";
+                        error.code = "";
                     }
+                    console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
+                    if (retried != true) httpRequest(options, callback, body, true);
+                    else callback(error, result.data);
                     break;
             }
         });
     });
     req.on('error', function (err) {
+        console.error("\x1b[31mREQUEST QUERY\x1b[0m:", options.path);
+        console.error("\x1b[31mREQUEST ERROR\x1b[0m:", JSON.stringify(err));
         if (retried != true) httpRequest(options, callback, body, true);
-        else {
-            console.error("\x1b[31mREQUEST QUERY\x1b[0m:", options.path);
-            console.error("\x1b[31mREQUEST ERROR\x1b[0m:", JSON.stringify(err));
-            callback(err, null);
-        }
+        else callback(err, null);
     });
 
 
