@@ -165,21 +165,25 @@ function httpRequest(options, callback, body, retry) {
                     };
                     break;
                 default:
-                    let error = {};
-                    if (result.error) {
-                        if (result.error.status) error.status = result.error.status;
-                        else error.status = result.result.status;
-                        if (result.error && result.error.message) error.message = result.error.message;
-                        else error.message = result.error;
-                        if (result.error && result.error.code) error.code = result.error.code;
-                        else error.code = "";
-                    } else if (result.result) {
-                        error.status = result.result.status;
-                        error.message = "Unable to request ACS. Please try to update the API token.";
-                        error.code = "";
+                    if (retry) httpRequest(options, callback, body, true);
+                    else {
+                        let error = {};
+
+                        if (result.error) {
+                            if (result.error.status) error.status = result.error.status;
+                            else error.status = result.result.status;
+                            if (result.error && result.error.message) error.message = result.error.message;
+                            else error.message = result.error;
+                            if (result.error && result.error.code) error.code = result.error.code;
+                            else error.code = "";
+                        } else if (result.result) {
+                            error.status = result.result.status;
+                            error.message = "Unable to request ACS. Please try to update the API token.";
+                            error.code = "";
+                        }
+                        console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
+                        callback(error, result.data);
                     }
-                    console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
-                    callback(error, result.data);
                     break;
             }
         });

@@ -13,7 +13,7 @@ var api = require("./../req");
  *  */
 module.exports.devices = function (xapi, devAccount, callback) {
 
-    var path = '/xapi/v1/monitor/devices/?ownerId=' + xapi.ownerId;
+    var path = '/xapi/v1/monitor/devices?ownerId=' + xapi.ownerId;
 
     // send the API request
     api.GET(xapi, devAccount, path,  callback);
@@ -33,7 +33,7 @@ module.exports.devices = function (xapi, devAccount, callback) {
  *  */
 module.exports.device = function (xapi, devAccount, deviceId, callback) {
 
-    var path = '/xapi/v1/monitor/devices/' + deviceId + '/?ownerId=' + xapi.ownerId;
+    var path = '/xapi/v1/monitor/devices/' + deviceId + '?ownerId=' + xapi.ownerId;
 
     // send the API request
     api.GET(xapi, devAccount, path,  callback);
