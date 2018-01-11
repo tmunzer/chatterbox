@@ -126,7 +126,7 @@ module.exports.DELETE = function (xapi, devAccount, path, callback) {
     httpRequest(options, callback);
 };
 
-function httpRequest(options, callback, body, retry) {
+function httpRequest(options, callback, body, retried) {
     let result = {};
     result.request = {};
     result.result = {};
@@ -155,7 +155,7 @@ function httpRequest(options, callback, body, retry) {
                     callback(null, result.data);
                     break;
                 case 404:
-                    if (retry) httpRequest(options, callback, body, true);
+                    if (retried != true) httpRequest(options, callback, body, true);
                     else {
                         error.status = 404;
                         error.message = "Unable to request ACS. Please try to update the API token.";
@@ -165,10 +165,9 @@ function httpRequest(options, callback, body, retry) {
                     };
                     break;
                 default:
-                    if (retry) httpRequest(options, callback, body, true);
+                    if (retried != true) httpRequest(options, callback, body, true);
                     else {
                         let error = {};
-
                         if (result.error) {
                             if (result.error.status) error.status = result.error.status;
                             else error.status = result.result.status;
@@ -189,9 +188,12 @@ function httpRequest(options, callback, body, retry) {
         });
     });
     req.on('error', function (err) {
-        console.error("\x1b[31mREQUEST QUERY\x1b[0m:", options.path);
-        console.error("\x1b[31mREQUEST ERROR\x1b[0m:", JSON.stringify(err));
-        callback(err, null);
+        if (retried != true) httpRequest(options, callback, body, true);
+        else {
+            console.error("\x1b[31mREQUEST QUERY\x1b[0m:", options.path);
+            console.error("\x1b[31mREQUEST ERROR\x1b[0m:", JSON.stringify(err));
+            callback(err, null);
+        }
     });
 
 
