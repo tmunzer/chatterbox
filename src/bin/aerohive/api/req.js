@@ -126,7 +126,7 @@ module.exports.DELETE = function (xapi, devAccount, path, callback) {
     httpRequest(options, callback);
 };
 
-function httpRequest(options, callback, body) {
+function httpRequest(options, callback, body, retry) {
     let result = {};
     result.request = {};
     result.result = {};
@@ -154,6 +154,16 @@ function httpRequest(options, callback, body) {
                 case 200:
                     callback(null, result.data);
                     break;
+                case 404:
+                    if (retry) httpRequest(options, callback, body, true);
+                    else {
+                        error.status = 404;
+                        error.message = "Unable to request ACS. Please try to update the API token.";
+                        error.code = "";
+                        console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
+                        callback(error, result.data);
+                    };
+                    break;
                 default:
                     let error = {};
                     if (result.error) {
@@ -163,15 +173,14 @@ function httpRequest(options, callback, body) {
                         else error.message = result.error;
                         if (result.error && result.error.code) error.code = result.error.code;
                         else error.code = "";
-                    } else if (result.status == 404) {
-                        error.status = 404;
+                    } else if (result.result) {
+                        error.status = result.result.status;
                         error.message = "Unable to request ACS. Please try to update the API token.";
                         error.code = "";
                     }
                     console.error("\x1b[31mRESPONSE ERROR\x1b[0m:", JSON.stringify(result));
                     callback(error, result.data);
                     break;
-
             }
         });
     });
