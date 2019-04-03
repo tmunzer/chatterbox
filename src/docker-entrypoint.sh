@@ -1,4 +1,5 @@
 #!/bin/sh
+
 cd /app/bin
 if [ "$1" ]
 then

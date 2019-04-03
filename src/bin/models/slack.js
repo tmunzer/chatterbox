@@ -15,7 +15,8 @@ var SlackSchema = new mongoose.Schema({
     },
     created_at: { type: Date },
     updated_at: { type: Date }
-});
+}, {usePushEach: true});
+
  
 var Slack = mongoose.model('Slack', SlackSchema);
 

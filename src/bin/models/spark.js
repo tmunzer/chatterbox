@@ -13,7 +13,8 @@ var SparkSchema = new mongoose.Schema({
     roomId: { type: String},
     created_at: { type: Date },
     updated_at: { type: Date }
-});
+}, {usePushEach: true});
+
 
 var Spark = mongoose.model('Spark', SparkSchema);
 

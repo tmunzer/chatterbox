@@ -13,7 +13,7 @@ var AcsSchema = new mongoose.Schema({
     spark: [{ type: mongoose.Schema.ObjectId, ref: "Spark" }],
     created_at: { type: Date },
     updated_at: { type: Date }
-});
+}, {usePushEach: true});
 
 var Acs = mongoose.model('Acs', AcsSchema);
 

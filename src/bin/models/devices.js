@@ -12,7 +12,8 @@ var DeviceSchema = new mongoose.Schema({
     connected: {type: Boolean, required: true},
     created_at: { type: Date },
     updated_at: { type: Date }
-});
+}, {usePushEach: true});
+
  
 var Device = mongoose.model('Device', DeviceSchema);
 
